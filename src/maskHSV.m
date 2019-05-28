@@ -1,4 +1,4 @@
-function [BW,maskedRGBImage] = createMask5(RGB)
+function [BW,maskedRGBImage] = maskHSV(RGB)
 %createMask  Threshold RGB image using auto-generated code from colorThresholder app.
 %  [BW,MASKEDRGBIMAGE] = createMask(RGB) thresholds image RGB using
 %  auto-generated code from the colorThresholder App. The colorspace and
@@ -11,28 +11,25 @@ function [BW,maskedRGBImage] = createMask5(RGB)
 
 
 % Convert RGB image to chosen color space
-I = rgb2lab(RGB);
+I = rgb2hsv(RGB);
 
 % Define thresholds for channel 1 based on histogram settings
-channel1Min = 0.000;
-channel1Max = 77.609;
+channel1Min = 0.114;
+channel1Max = 0.093;
 
 % Define thresholds for channel 2 based on histogram settings
-channel2Min = -2.598;
-channel2Max = 8.236;
+channel2Min = 0.137;
+channel2Max = 1.000;
 
 % Define thresholds for channel 3 based on histogram settings
-channel3Min = 7.363;
-channel3Max = 36.114;
+channel3Min = 0.173;
+channel3Max = 0.919;
 
 % Create mask based on chosen histogram thresholds
-sliderBW = (I(:,:,1) >= channel1Min ) & (I(:,:,1) <= channel1Max) & ...
+sliderBW = ( (I(:,:,1) >= channel1Min) | (I(:,:,1) <= channel1Max) ) & ...
     (I(:,:,2) >= channel2Min ) & (I(:,:,2) <= channel2Max) & ...
     (I(:,:,3) >= channel3Min ) & (I(:,:,3) <= channel3Max);
 BW = sliderBW;
-
-% Invert mask
-BW = ~BW;
 
 % Initialize output masked image based on input image.
 maskedRGBImage = RGB;
