@@ -9,6 +9,6 @@ masked2Gray = rgb2gray(masked2);
 [IbwS, maskedS] = segmentImage2(masked2Gray);
 imshow(IbwS);
 
-IbwFinal = imbinarize(Ibw1.*Ibw.*IbwS);
+IbwFinal = imbinarize(Ibw1.*Ibw.*);
 %imshow(IbwFinal);
-[Ifinal, data] = filterRegions2(IbwFinal); 
+[Ifinal, data] = filterRegions(IbwFinal); 
