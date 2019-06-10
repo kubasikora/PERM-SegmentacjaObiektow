@@ -18,16 +18,27 @@ pen_count = 0;
 old_image = I;
 
 for i=1:length(data)
-    
+    biggestCircleDiameter = 0;
+    if (checkIfCircle(data(i)) == 1)
+        if(data(i).EquivDiameter > biggestCircleDiameter)
+            biggestCircleDiameter = data(i).EquivDiameter;
+        end
+    end
+end
+
+realBiggestCircleDiameter = 87;
+px2mmRatio = realBiggestCircleDiameter / biggestCircleDiameter;
+
+for i=1:length(data)
     if (checkIfCircle(data(i)) == 1)
         circle_count = circle_count + 1;
-        new_image = addCircleInfo(old_image, data(i));
-        old_image = new_image;
-    elseif (checkIfPen(data(i)) == 1)
-        pen_count = pen_count + 1;
-        new_image = addPenInfo(old_image, data(i));
+        new_image = addCircleInfo(old_image, data(i), px2mmRatio);
         old_image = new_image;
         
+    elseif (checkIfPen(data(i)) == 1)
+        pen_count = pen_count + 1;
+        new_image = addPenInfo(old_image, data(i), px2mmRatio);
+        old_image = new_image;
     end
 end
 
@@ -42,25 +53,28 @@ end
 
 function [out] = checkIfPen(shape)
     out = 0;
-    if (shape.MajorAxisLength / shape.MinorAxisLength > 5)
+    if (shape.MajorAxisLength / shape.MinorAxisLength > 7)
         out = 1;
     end
 end
 
-function [withText] = addCircleInfo(original, shape)
+function [withText] = addCircleInfo(original, shape, px2mmRatio)
     
-    text = ['�rednica: ' num2str(shape.EquivDiameter,'%0.2f') 'px'];
-    position = [shape.PixelList(1,1) shape.PixelList(1,2)];
-    
+    texts = cell(2,1);
+    text{1} = ['Srednica: ' num2str(shape.EquivDiameter*px2mmRatio, '%0.2f') 'mm'];
+    text{2} = ['Kolor: ' char(getColor(shape, original))];
+    position = [shape.PixelList(1,1) shape.PixelList(1,2); shape.PixelList(1,1) shape.PixelList(1,2)+40];
     withText = insertText(original, position, text, 'FontSize', 24, 'BoxColor', 'yellow');
 end
 
-function [withText] = addPenInfo(original, shape)
+function [withText] = addPenInfo(original, shape, px2mmRatio)
     
     texts = cell(2,1);
-    text{1} = ['D�ugo��: ' num2str(shape.MajorAxisLength,'%0.2f') 'px'];
-    text{2} = ['Orientacja: ' num2str(shape.Orientation,'%0.2f') '�'];
-    position = [shape.PixelList(1,1) shape.PixelList(1,2); shape.PixelList(1,1) shape.PixelList(1,2)+40];
+    text{1} = ['Dlugosc: ' num2str(shape.MajorAxisLength*px2mmRatio,'%0.2f') 'mm'];
+    text{2} = ['Orientacja: ' num2str(shape.Orientation,'%0.2f') '°'];
+    text{3} = ['Kolor: ' char(getColor(shape, original))];
+    position = [shape.PixelList(1,1) shape.PixelList(1,2); shape.PixelList(1,1) shape.PixelList(1,2)+40
+        shape.PixelList(1,1) shape.PixelList(1,2)+80];
     
     withText = insertText(original, position, text, 'FontSize', 24, 'BoxColor', 'green');
 end
