@@ -1,40 +1,3 @@
-<<<<<<< HEAD
-clear all
-close all
-[image, grayImage] = loadImage('../data/data1.jpg');
-
-figure
-hold on
-title('Oryginalny obraz do analizy');
-imshow(image);
-hold off
-
-figure
-hold on
-title('Obraz w skali szaroÅ›ci');
-imshow(grayImage);
-hold off
-
-%% color thresholder
-[binaryMask, image] = simpleMask(image);
-
-figure
-hold on
-title('Obraz po progowaniu kolorÃ³w');
-imshow(image);
-hold off
-
-
-%% segmentacja 
-
-[bw, image]= segmentImage(image);
-
-figure
-hold on
-title('Obraz po segmentacji');
-imshow(image);
-hold off
-=======
 I = imread('../data/data2.jpg');
 
 I = imgaussfilt(I, 5);
@@ -86,7 +49,7 @@ end
 
 function [withText] = addCircleInfo(original, shape)
     
-    text = ['Œrednica: ' num2str(shape.EquivDiameter,'%0.2f') 'px'];
+    text = ['ï¿½rednica: ' num2str(shape.EquivDiameter,'%0.2f') 'px'];
     position = [shape.PixelList(1,1) shape.PixelList(1,2)];
     
     withText = insertText(original, position, text, 'FontSize', 24, 'BoxColor', 'yellow');
@@ -95,10 +58,9 @@ end
 function [withText] = addPenInfo(original, shape)
     
     texts = cell(2,1);
-    text{1} = ['D³ugoœæ: ' num2str(shape.MajorAxisLength,'%0.2f') 'px'];
-    text{2} = ['Orientacja: ' num2str(shape.Orientation,'%0.2f') '°'];
+    text{1} = ['Dï¿½ugoï¿½ï¿½: ' num2str(shape.MajorAxisLength,'%0.2f') 'px'];
+    text{2} = ['Orientacja: ' num2str(shape.Orientation,'%0.2f') 'ï¿½'];
     position = [shape.PixelList(1,1) shape.PixelList(1,2); shape.PixelList(1,1) shape.PixelList(1,2)+40];
     
     withText = insertText(original, position, text, 'FontSize', 24, 'BoxColor', 'green');
 end
->>>>>>> f67efb71398ad0ee7e90bc9df723ab25f84ab58f
